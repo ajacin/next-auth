@@ -87,3 +87,7 @@ and should save the above in the Application=> Cookies already
     - import { getServerSession } from "next-auth";
 
 Tried to implement server side and client side session
+
+## React hot toast
+
+npm i react-hot-toast

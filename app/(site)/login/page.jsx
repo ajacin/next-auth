@@ -2,15 +2,22 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { toast } from "react-hot-toast";
 
 export default function Login() {
   const [data, setData] = useState({ email: "", password: "" });
 
   const loginUser = (e) => {
     e.preventDefault();
-    signIn("credentials", { ...data, redirect: false }).then(() =>
-      alert("loggedin")
-    );
+    signIn("credentials", { ...data, redirect: false }).then((callback) => {
+      if (callback?.error) {
+        // Error entered in api
+        toast.error(callback.error);
+      }
+      if (callback?.ok && !callback?.error) {
+        toast.success("Logged in succesfully");
+      }
+    });
   };
   return (
     <>

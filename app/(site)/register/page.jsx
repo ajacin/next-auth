@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 
 export default function SignUp() {
   const [data, setData] = useState({ name: "", email: "", password: "" });
@@ -10,7 +11,11 @@ export default function SignUp() {
     e.preventDefault();
     axios
       .post("/api/register", data)
-      .then(() => alert("user registerd").catch(() => alert("error occured")));
+      .then(() =>
+        toast
+          .success("user Registerd")
+          .catch((e) => toast.error("error occured"))
+      );
   };
   return (
     <>
