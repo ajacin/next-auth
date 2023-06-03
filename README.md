@@ -36,3 +36,54 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 # Notes
 
 > npx create-next-app@latest ./
+
+## Prism to connect to mongodb
+
+> npm i -D prisma
+> npx prisma init
+
+- Creates two noticeble changes
+
+  - Prisma folder -> schema.prisma If not syntax highlighted, use extention prisma
+    - Update the database to mongodb
+    - Update DATABASE_URL to corresponding one from mongodb and added /nextauthdb as the db in the url
+  - .env file created
+
+- Create models in schema.prisma
+- To access prisma gloabally, install prisma client
+  > npm i @prisma/client
+
+add a libs folder under app and prismadb.jsx to import client and write logic
+
+## Install packages from next auth
+
+npm i next-auth@latest @next-auth/prisma-adapter
+
+## Main entry point for api
+
+app/api/auth/[...nextauth]/route.jsx
+
+step not in tut: remove / from jsconfig.json to enable aliases "@/_": ["./_"] => "@_": ["./_"]
+
+## Three providers
+
+- Credentials
+- Google providers
+- Github providers
+
+Implement route.jsx
+
+run the project with hardcoded user and should render prebuilt login page
+next-auth.session-token eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..gbztdMWJdEI-YG7V.YXqockD1LXIx2gYhMYcXRnwD3GKwjfrkXHIOBjaTU3vHCryfnSI_2nWJ30WAbF6OKDccgEfKi8ZxcwmnHKxOsmqlRP1lDr95ZbuSi6PTO8vWdgfnujineKuSsYfsErNZPqiyRwoSefYL395D-RU_Gm9bIPPW9gciKCUzlXOZdpmAnXBILNU.kiEFppzjdnLA1ZU3t2u4ug localhost / 2023-07-03T08:39:05.835Z 283 ✓ Lax Medium
+next-auth.callback-url http%3A%2F%2Flocalhost%3A3000 localhost / Session 51 ✓ Lax Medium
+next-auth.csrf-token
+
+and should save the above in the Application=> Cookies already
+
+- session token gives session data
+- Two ways to get the session data:
+  - Client side
+  - Server side
+    - import { getServerSession } from "next-auth";
+
+Tried to implement server side and client side session
