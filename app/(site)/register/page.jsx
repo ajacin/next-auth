@@ -3,7 +3,7 @@
 import axios from "axios";
 import { useState } from "react";
 
-export default function Example() {
+export default function SignUp() {
   const [data, setData] = useState({ name: "", email: "", password: "" });
 
   const registerUser = (e) => {

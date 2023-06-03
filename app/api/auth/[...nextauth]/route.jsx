@@ -4,6 +4,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
+import bcrypt from "bcrypt";
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
@@ -28,23 +29,33 @@ export const authOptions = {
         email: {
           label: "Email",
           type: "text",
-          placeholder: "mail@arunjacob.com",
+          placeholder: "test@yopmail.com",
         },
-        username: { label: "Username", type: "text", placeholder: "arunjacob" },
+        username: { label: "Username", type: "text", placeholder: "test" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        console.log(credentials);
         // dummy. Next auth gives a pre built ui page to test
-        const user = { id: 1, name: "A Jacob", email: "arun@yopmail.com" };
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user;
-        } else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          return null;
-
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+        if (!credentials.email || !credentials.password) {
+          throw new error("Please enter an email and password");
         }
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
+        if (!user || !user?.hashedPassword) {
+          // Any object returned will be saved in `user` property of the JWT
+          throw new Error("No user found");
+        }
+        const passwordsMatch = await bcrypt.compare(
+          credentials.password,
+          user.hashedPassword
+        );
+        if (!passwordsMatch) {
+          throw new Error("Incorrect password");
+        }
+
+        return user;
       },
     }),
   ],
