@@ -9,10 +9,18 @@ import bcrypt from "bcrypt";
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
+    // https://github.com/settings/applications/new
     GithubProvider({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
     }),
+    // https://console.cloud.google.com/
+    /**
+     * scopes
+     * ./auth/userinfo.email	See your primary Google Account email address
+     * .../auth/userinfo.profile	See your personal info, including any personal info you've made publicly available
+     * openid	Associate you with your personal info on Google
+     */
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
